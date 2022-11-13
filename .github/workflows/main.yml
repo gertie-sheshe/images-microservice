@@ -16,9 +16,9 @@ jobs:
       - run: docker tag udagram-api-feed:v1 kidoti/udagram-api-feed:v1
       - run: docker tag udagram-api-user:v1 kidoti/udagram-api-user:v1
       - run: docker tag udagram-frontend:local kidoti/udagram-frontend:v1
-      - run: docker tag udagram-reverseproxy:v1 kidoti/udagram-reverseproxy:v1
+      - run: docker tag reverseproxy:v1 kidoti/reverseproxy:v1
       - run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - run: docker push kidoti/udagram-api-feed:v1
       - run: docker push kidoti/udagram-api-user:v1
       - run: docker push kidoti/udagram-frontend:v1
-      - run: docker push kidoti/udagram-reverseproxy:v1
+      - run: docker push kidoti/reverseproxy:v1
