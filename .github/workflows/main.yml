@@ -9,34 +9,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./udagram-api-feed/Dockerfile
-          push: true
-          tags: kidoti/udagram-api-feed:v1
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./udagram-api-user/Dockerfile
-          push: true
-          tags: kidoti/udagram-api-user:v1
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./udagram-frontend/Dockerfile
-          push: true
-          tags: kidoti/udagram-frontend:latest
+      - uses: actions/checkout@v3
+      - run: docker-compose -f docker-compose-build.yaml build --parallel
+      - run: docker tag udagram-api-feed:v1 kidoti/udagram-api-feed:v1
+      - run: docker tag udagram-api-user:v1 kidoti/udagram-api-user:v1
+      - run: docker tag udagram-frontend:local kidoti/udagram-frontend:v1
+      - run: docker tag udagram-reverseproxy:v1 kidoti/udagram-reverseproxy:v1
+      - run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - run: docker push kidoti/udagram-api-feed:v1
+      - run: docker push kidoti/udagram-api-user:v1
+      - run: docker push kidoti/udagram-frontend:v1
+      - run: docker push kidoti/udagram-reverseproxy:v1
