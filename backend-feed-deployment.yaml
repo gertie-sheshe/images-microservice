@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-feed
+  labels:
+    app: backend-feed
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-feed
+  template:
+    metadata:
+      labels:
+        app: backend-feed
+
+    spec:
+      containers:
+        - name: backend-feed
+          image: kidoti/udagram-api-feed:v1
+          resources:
+            requests:
+              cpu: 500m
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: udagram-env
+            - secretRef:
+                name: udagram-secrets

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-user
+  labels:
+    app: backend-user
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-user
+  template:
+    metadata:
+      labels:
+        app: backend-user
+
+    spec:
+      containers:
+        - name: backend-user
+          image: kidoti/udagram-api-user:v1
+          resources:
+            requests:
+              cpu: 500m
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: udagram-env
+            - secretRef:
+                name: udagram-secrets
